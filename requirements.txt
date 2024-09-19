@@ -26,7 +26,6 @@ pyOpenSSL==24.2.1
 queuelib==1.7.0
 requests==2.32.3
 requests-file==2.1.0
-Scrapy==2.11.2
 service-identity==24.1.0
 setuptools==74.1.2
 tldextract==5.1.2
@@ -35,3 +34,8 @@ typing_extensions==4.12.2
 urllib3==2.2.3
 w3lib==2.2.1
 zope.interface==7.0.3
+boto3==1.18.69
+scrapy==2.6.1
+boto3==1.18.69
+spacy==3.2.0  # Ensure you're using an older, stable version
+thinc==8.0.15
