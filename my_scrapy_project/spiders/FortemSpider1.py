@@ -2,8 +2,14 @@ import scrapy
 
 class FortemSpider1(scrapy.Spider):
     name = "FortemSpider1"
-    allowed_domains = ["fortem.co.uk"]
-    start_urls = ["https://www.fortem.co.uk/"]
+    allowed_domains = []  # Empty list to allow all domains
+
+
+    # Add the init method to accept start_url dynamically
+    def __init__(self, start_url=None, *args, **kwargs):
+        super(FortemSpider1, self).__init__(*args, **kwargs)
+        if start_url:
+            self.start_urls = [start_url]  # Set the start URL dynamically
 
     def parse(self, response):
         # Extract title of the page

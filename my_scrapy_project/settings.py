@@ -97,6 +97,9 @@ ITEM_PIPELINES = {
     'scrapy.pipelines.images.ImagesPipeline': 1,
     'scrapy.pipelines.files.FilesPipeline': 2,
 }
+ITEM_PIPELINES = {
+    'my_scrapy_project.pipelines.S3Pipeline': 300,
+}
 
 # Set Media URL paths
 IMAGES_STORE = 'images'
