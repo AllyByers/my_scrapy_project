@@ -38,7 +38,6 @@ scrapy==2.6.1
 boto3==1.28.12  # Updated version
 spacy==3.2.0
 thinc==8.0.15
-Scrapy==2.5.1
 boto3==1.18.69
 cryptography>=3.2
 cffi>=1.14
