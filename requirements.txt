@@ -31,11 +31,15 @@ setuptools==74.1.2
 tldextract==5.1.2
 Twisted==24.7.0
 typing_extensions==4.12.2
-urllib3==2.2.3
+urllib3
 w3lib==2.2.1
 zope.interface==7.0.3
 scrapy==2.6.1
 boto3==1.28.12  # Updated version
 spacy==3.2.0
 thinc==8.0.15
+Scrapy==2.5.1
+boto3==1.18.69
+cryptography>=3.2
+cffi>=1.14
 
