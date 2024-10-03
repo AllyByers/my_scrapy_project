@@ -104,3 +104,7 @@ ITEM_PIPELINES = {
 # Set Media URL paths
 IMAGES_STORE = 'images'
 FILES_STORE = 'files'
+
+# Add these settings to force Scrapy to use modern TLS settings
+DOWNLOADER_CLIENT_TLS_METHOD = 'TLS'
+DOWNLOADER_CLIENT_TLS_VERBOSE_LOGGING = True
