@@ -15,6 +15,5 @@ def start_spider():
     return {"error": "No URL provided"}, 400
 
 if __name__ == '__main__':
-    # Get the PORT from the environment variable (Render will provide this)
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 10000))  # Default to 10000 if the PORT variable is not set
+    app.run(host='0.0.0.0', port=port)  # Listen on all network interfaces
