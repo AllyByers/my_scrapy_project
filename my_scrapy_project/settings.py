@@ -113,3 +113,21 @@ DOWNLOADER_CLIENT_TLS_VERBOSE_LOGGING = True
 DOWNLOADER_CLIENT_TLS_CIPHERS = 'ECDHE+AESGCM:ECDHE+CHACHA20:ECDHE+SHA256:!SSLv3:!TLSv1:!TLSv1.1'
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+
+RETRY_ENABLED = True
+RETRY_TIMES = 5  # Number of retries
+RETRY_HTTP_CODES = [500, 502, 503, 504, 403]  # Include 403 in the retry codes
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
+    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 100,
+    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 200,
+}
+
+# Enable retrying failed HTTP requests
+RETRY_ENABLED = True
+RETRY_TIMES = 10
+RETRY_HTTP_CODES = [500, 502, 503, 504, 403, 408]
+
+# Enable Scrapy Proxy Pool
+PROXY_POOL_ENABLED = True
