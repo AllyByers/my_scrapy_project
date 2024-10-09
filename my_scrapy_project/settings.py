@@ -131,3 +131,24 @@ RETRY_HTTP_CODES = [500, 502, 503, 504, 403, 408]
 
 # Enable Scrapy Proxy Pool
 PROXY_POOL_ENABLED = True
+
+DEPTH_LIMIT = 5  # Scrapy will follow links up to 5 levels deep
+
+DEPTH_PRIORITY = 1  # Prioritizes deeper pages over shallow ones
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+}
+
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+
+SPLASH_URL =  'https://splash-service-rfid.onrender.com'
+
+
