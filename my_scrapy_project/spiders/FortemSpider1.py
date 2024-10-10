@@ -1,38 +1,49 @@
 import scrapy
+from scrapy_splash import SplashRequest
 
-class FortemSpider1(scrapy.Spider):
-    name = "FortemSpider1"
-    allowed_domains = []  # Empty list to allow all domains
+class DualScraperSpider(scrapy.Spider):
+    name = "dual_scraper"
 
+    def __init__(self, start_url_1=None, start_url_2=None, *args, **kwargs):
+        super(DualScraperSpider, self).__init__(*args, **kwargs)
+        self.start_urls_1 = [start_url_1] if start_url_1 else []
+        self.start_urls_2 = [start_url_2] if start_url_2 else []
 
-    # Add the init method to accept start_url dynamically
-    def __init__(self, start_url=None, *args, **kwargs):
-        super(FortemSpider1, self).__init__(*args, **kwargs)
-        if start_url:
-            self.start_urls = [start_url]  # Set the start URL dynamically
+    def start_requests(self):
+        # Deep scraping for website 1
+        for url in self.start_urls_1:
+            yield SplashRequest(url, self.deep_parse, args={'wait': 2})
 
-    def parse(self, response):
-        # Extract title of the page
+        # Shallow scraping for website 2
+        for url in self.start_urls_2:
+            yield SplashRequest(url, self.shallow_parse, args={'wait': 2})
+
+    def deep_parse(self, response):
+        # Deep scraping logic here
+        self.logger.info(f'Deep scraping: {response.url}')
         page_title = response.css('title::text').get()
-        
-        # Extract all paragraphs
         paragraphs = response.css('p::text').getall()
-        
-        # Extract all image URLs
-        image_urls = response.css('img::attr(src)').getall()
+        images = response.css('img::attr(src)').getall()
 
-        # Store extracted data
+        # Follow links for deeper scraping
+        for next_page in response.css('a::attr(href)').getall():
+            next_page = response.urljoin(next_page)
+            if self.allowed_domains[0] in next_page:
+                yield SplashRequest(next_page, self.deep_parse, args={'wait': 2})
+
         yield {
             'title': page_title,
             'paragraphs': paragraphs,
-            'images': image_urls
+            'images': images
         }
 
-        # Follow links to next pages
-        for next_page in response.css('a::attr(href)').getall():
-            # Clean up the next_page URL and make sure it stays within the domain
-            next_page = response.urljoin(next_page)
-            
-            # Only follow links that are within the allowed domain
-            if self.allowed_domains[0] in next_page:
-                yield scrapy.Request(next_page, callback=self.parse)
+    def shallow_parse(self, response):
+        # Shallow scraping logic here
+        self.logger.info(f'Shallow scraping: {response.url}')
+        page_title = response.css('title::text').get()
+        paragraphs = response.css('p::text').getall()
+
+        yield {
+            'title': page_title,
+            'paragraphs': paragraphs
+        }
