@@ -1,11 +1,11 @@
 import scrapy
 from scrapy_splash import SplashRequest
 
-class DualScraperSpider(scrapy.Spider):
-    name = "dual_scraper"
+class FortemSpider1(scrapy.Spider):
+    name = "fortem_scraper_1"
 
     def __init__(self, start_url_1=None, start_url_2=None, *args, **kwargs):
-        super(DualScraperSpider, self).__init__(*args, **kwargs)
+        super(FortemSpider1, self).__init__(*args, **kwargs)
         self.start_urls_1 = [start_url_1] if start_url_1 else []
         self.start_urls_2 = [start_url_2] if start_url_2 else []
 
@@ -28,11 +28,9 @@ class DualScraperSpider(scrapy.Spider):
         # Follow links for deeper scraping
         for next_page in response.css('a::attr(href)').getall():
             next_page = response.urljoin(next_page)
-            # Modify this condition to ensure you're staying within the intended domain
             if self.allowed_domains and self.allowed_domains[0] in next_page:
                 yield SplashRequest(next_page, self.deep_parse, args={'wait': 2})
 
-        # Yield the scraped data for website 1
         yield {
             'url': response.url,
             'title': page_title,
@@ -46,7 +44,6 @@ class DualScraperSpider(scrapy.Spider):
         page_title = response.css('title::text').get()
         paragraphs = response.css('p::text').getall()
 
-        # Yield the scraped data for website 2
         yield {
             'url': response.url,
             'title': page_title,
