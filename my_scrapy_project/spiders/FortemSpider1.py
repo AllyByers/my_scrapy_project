@@ -19,7 +19,7 @@ class DualScraperSpider(scrapy.Spider):
             yield SplashRequest(url, self.shallow_parse, args={'wait': 2})
 
     def deep_parse(self, response):
-        # Deep scraping logic here
+        # Deep scraping logic for website 1
         self.logger.info(f'Deep scraping: {response.url}')
         page_title = response.css('title::text').get()
         paragraphs = response.css('p::text').getall()
@@ -28,22 +28,27 @@ class DualScraperSpider(scrapy.Spider):
         # Follow links for deeper scraping
         for next_page in response.css('a::attr(href)').getall():
             next_page = response.urljoin(next_page)
-            if self.allowed_domains[0] in next_page:
+            # Modify this condition to ensure you're staying within the intended domain
+            if self.allowed_domains and self.allowed_domains[0] in next_page:
                 yield SplashRequest(next_page, self.deep_parse, args={'wait': 2})
 
+        # Yield the scraped data for website 1
         yield {
+            'url': response.url,
             'title': page_title,
             'paragraphs': paragraphs,
             'images': images
         }
 
     def shallow_parse(self, response):
-        # Shallow scraping logic here
+        # Shallow scraping logic for website 2
         self.logger.info(f'Shallow scraping: {response.url}')
         page_title = response.css('title::text').get()
         paragraphs = response.css('p::text').getall()
 
+        # Yield the scraped data for website 2
         yield {
+            'url': response.url,
             'title': page_title,
             'paragraphs': paragraphs
         }
