@@ -26,10 +26,9 @@ def start_spider():
     def run_spider(start_url_1, start_url_2):
         process = CrawlerProcess(get_project_settings())
         process.crawl(FortemSpider1, start_url_1=start_url_1, start_url_2=start_url_2)
-        process.start(stop_after_crawl=False)
+        process.start()
 
     # Run the Scrapy spider with the provided URLs
-    reactor._handleSignals = False  # Disable signal handling for Scrapy in a headless environment
     run_spider(start_url_1, start_url_2)
 
     return jsonify({"message": "Spider started successfully"}), 200
