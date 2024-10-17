@@ -9,13 +9,18 @@ app = Flask(__name__)
 
 @app.route('/start_spider', methods=['POST'])
 def start_spider():
+    # Ensure that the request body contains JSON
+    if not request.is_json:
+        return jsonify({"error": "Request body must be JSON"}), 400
+
     # Get the URLs from the JSON body of the request
-    start_url_1 = request.json.get('start_url_1')
-    start_url_2 = request.json.get('start_url_2')
+    data = request.get_json()
+    start_url_1 = data.get('start_url_1')
+    start_url_2 = data.get('start_url_2')
 
     # Check if URLs are provided
     if not start_url_1 or not start_url_2:
-        return jsonify({"error": "No URL provided"}), 400
+        return jsonify({"error": "Both start_url_1 and start_url_2 must be provided"}), 400
 
     # Create a method to run the Scrapy spider
     def run_spider(start_url_1, start_url_2):
