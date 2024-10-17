@@ -36,4 +36,6 @@ def run_spider(start_url_1, start_url_2):
     runner.crawl(FortemSpider1, start_url_1=start_url_1, start_url_2=start_url_2)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get('PORT', 5000))  # Default to port 5000 if not set
+    app.run(debug=True, host='0.0.0.0', port=port)
