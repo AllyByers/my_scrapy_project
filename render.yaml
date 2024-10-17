@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: my-scrapy-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --timeout 120 app:app --bind 0.0.0.0:10000  # Set a custom timeout of 120 seconds
+    plan: free  # You can change this to "starter" or any other plan depending on your usage.
+    autoDeploy: true  # Automatically deploy new changes
