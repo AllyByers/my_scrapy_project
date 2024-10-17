@@ -12,25 +12,30 @@ class FortemSpider1(scrapy.Spider):
     def start_requests(self):
         # Deep scraping for website 1
         for url in self.start_urls_1:
-            yield SplashRequest(url, self.deep_parse, args={'wait': 2})
+            if url:
+                yield SplashRequest(url, self.deep_parse, args={'wait': 2}, errback=self.handle_error)
 
         # Shallow scraping for website 2
         for url in self.start_urls_2:
-            yield SplashRequest(url, self.shallow_parse, args={'wait': 2})
+            if url:
+                yield SplashRequest(url, self.shallow_parse, args={'wait': 2}, errback=self.handle_error)
 
     def deep_parse(self, response):
-        # Deep scraping logic for website 1
+        """ Deep scraping logic for website 1 """
         self.logger.info(f'Deep scraping: {response.url}')
-        page_title = response.css('title::text').get()
+
+        # Extract data
+        page_title = response.css('title::text').get(default='No Title')
         paragraphs = response.css('p::text').getall()
         images = response.css('img::attr(src)').getall()
 
-        # Follow links for deeper scraping
+        # Follow links for deeper scraping, limit depth to avoid infinite crawling
         for next_page in response.css('a::attr(href)').getall():
             next_page = response.urljoin(next_page)
             if self.allowed_domains and self.allowed_domains[0] in next_page:
-                yield SplashRequest(next_page, self.deep_parse, args={'wait': 2})
+                yield SplashRequest(next_page, self.deep_parse, args={'wait': 2}, errback=self.handle_error)
 
+        # Return the scraped data
         yield {
             'url': response.url,
             'title': page_title,
@@ -39,13 +44,20 @@ class FortemSpider1(scrapy.Spider):
         }
 
     def shallow_parse(self, response):
-        # Shallow scraping logic for website 2
+        """ Shallow scraping logic for website 2 """
         self.logger.info(f'Shallow scraping: {response.url}')
-        page_title = response.css('title::text').get()
+
+        # Extract data
+        page_title = response.css('title::text').get(default='No Title')
         paragraphs = response.css('p::text').getall()
 
+        # Return the scraped data
         yield {
             'url': response.url,
             'title': page_title,
             'paragraphs': paragraphs
         }
+
+    def handle_error(self, failure):
+        """ Handle errors during scraping """
+        self.logger.error(f"Error on {failure.request.url}: {failure.value}")
